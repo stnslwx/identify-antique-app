@@ -17,13 +17,11 @@ struct TabNavigationBar: View {
                 VStack {
                     Image(selectedTab == tab ? fillImage: tab.rawValue )
                     Text(tab.rawValue.capitalized)
-                        .foregroundStyle(selectedTab == tab ? Color("accentGreen"): Color(.gray))
+                        .foregroundStyle(selectedTab == tab ? Color("accentGreen"): Color("tabGrey"))
                 }
-                .frame(width: 83)
+                .frame(width: 80)
                 .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.1)){
-                        selectedTab = tab
-                    }
+                    selectedTab = tab
                 }
             }
         }
@@ -52,7 +50,9 @@ struct ScanButton: View {
                     .overlay(alignment: .center) {
                         Image("scan")
                             .overlay(alignment: .bottom) {
-                                Text("Scan").foregroundStyle(.gray)
+                                Text("Scan")
+                                    .frame(width: 80)
+                                    .foregroundStyle(Color("tabGrey"))
                                     .offset(y: 40)
                             }
                     }
