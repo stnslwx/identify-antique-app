@@ -11,7 +11,8 @@ import SwiftUI
 struct identify_antiqueApp: App {
     var body: some Scene {
         WindowGroup {
-            OnboardingView()
+            //OnboardingView()
+            ContentView()
         }
     }
 }
