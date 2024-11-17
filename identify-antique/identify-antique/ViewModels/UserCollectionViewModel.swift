@@ -8,5 +8,6 @@ final class UserCollectionViewModel: ObservableObject {
         guard !name.isEmpty else {return}
         let newCollection = Collection(name: name)
         collections.append(newCollection)
+        print("Collection: \(name) added: \(collections)")
     }
 }

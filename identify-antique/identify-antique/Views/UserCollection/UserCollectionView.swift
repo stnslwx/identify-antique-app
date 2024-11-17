@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct UserCollectionView: View {
+    
+    @ObservedObject var collectionVm: UserCollectionViewModel
+    
     @State private var selectedOption: ViewOption = .collection
     @State private var isCollectionEmpty: Bool = true
     
@@ -8,16 +11,18 @@ struct UserCollectionView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack {
+            VStack(spacing: 15) {
                 CustomPicker(selectedOption: $selectedOption)
-                UserCollectionStatistics(antiqueCount: 0, coutriesCount: 0, collectionsCount: 0)
+                UserCollectionStatistics(antiqueCount: 0, coutriesCount: 0, collectionsCount: collectionVm.collections.count)
                 if selectedOption == .collection {
-                    if isCollectionEmpty {
+                    if collectionVm.collections.isEmpty {
                         EmptyCollectionView(isCreateCollectionPresented: $isCreateCollectionPresented)
                             .padding(.top, 120)
+                    } else {
+                        CollectionsListView(collectionsVm: collectionVm, isCreateCollectionPresented: $isCreateCollectionPresented)
                     }
                 } else {
-                    Text("HISTORY")
+                    //User history here
                 }
                 Spacer()
             }
@@ -46,8 +51,5 @@ struct UserCollectionView: View {
             }
         }
     }
-}
-#Preview {
-    UserCollectionView(isCreateCollectionPresented: .constant(false))
 }
 

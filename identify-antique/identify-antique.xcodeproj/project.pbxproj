@@ -22,6 +22,8 @@
 		DAC321222CE9E27300FE9CFA /* CreateCollectionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC321212CE9E27300FE9CFA /* CreateCollectionSheet.swift */; };
 		DAC321242CE9F66E00FE9CFA /* UserCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC321232CE9F66E00FE9CFA /* UserCollectionViewModel.swift */; };
 		DAC321262CE9FD6C00FE9CFA /* UserCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC321252CE9FD6C00FE9CFA /* UserCollection.swift */; };
+		DAC321282CEA1B1700FE9CFA /* CollectionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC321272CEA1B1700FE9CFA /* CollectionsListView.swift */; };
+		DAC3212B2CEA665900FE9CFA /* CollectionItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC3212A2CEA665900FE9CFA /* CollectionItemView.swift */; };
 		DAD73E802CE765A400B2A1B1 /* identify_antiqueApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD73E7F2CE765A400B2A1B1 /* identify_antiqueApp.swift */; };
 		DAD73E822CE765A400B2A1B1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD73E812CE765A400B2A1B1 /* ContentView.swift */; };
 		DAD73E842CE765A700B2A1B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAD73E832CE765A700B2A1B1 /* Assets.xcassets */; };
@@ -48,6 +50,9 @@
 		DAC321212CE9E27300FE9CFA /* CreateCollectionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCollectionSheet.swift; sourceTree = "<group>"; };
 		DAC321232CE9F66E00FE9CFA /* UserCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCollectionViewModel.swift; sourceTree = "<group>"; };
 		DAC321252CE9FD6C00FE9CFA /* UserCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCollection.swift; sourceTree = "<group>"; };
+		DAC321272CEA1B1700FE9CFA /* CollectionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionsListView.swift; sourceTree = "<group>"; };
+		DAC321292CEA416600FE9CFA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		DAC3212A2CEA665900FE9CFA /* CollectionItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionItemView.swift; sourceTree = "<group>"; };
 		DAD73E7C2CE765A400B2A1B1 /* identify-antique.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "identify-antique.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAD73E7F2CE765A400B2A1B1 /* identify_antiqueApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = identify_antiqueApp.swift; sourceTree = "<group>"; };
 		DAD73E812CE765A400B2A1B1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -77,6 +82,8 @@
 				DA25685D2CE8FCF500E29243 /* UserCollectionStatistics.swift */,
 				DA25685F2CE9116000E29243 /* CustomPicker.swift */,
 				DAC321212CE9E27300FE9CFA /* CreateCollectionSheet.swift */,
+				DAC321272CEA1B1700FE9CFA /* CollectionsListView.swift */,
+				DAC3212A2CEA665900FE9CFA /* CollectionItemView.swift */,
 			);
 			path = UserCollection;
 			sourceTree = "<group>";
@@ -114,6 +121,7 @@
 		DAD73E7E2CE765A400B2A1B1 /* identify-antique */ = {
 			isa = PBXGroup;
 			children = (
+				DAC321292CEA416600FE9CFA /* Info.plist */,
 				DAD73E832CE765A700B2A1B1 /* Assets.xcassets */,
 				DAD73E7F2CE765A400B2A1B1 /* identify_antiqueApp.swift */,
 				DAD73E8E2CE767A500B2A1B1 /* Models */,
@@ -249,11 +257,13 @@
 				DA25685B2CE8FA1100E29243 /* UserCollectionView.swift in Sources */,
 				DAD73E962CE78C7900B2A1B1 /* Strings.swift in Sources */,
 				DAC321262CE9FD6C00FE9CFA /* UserCollection.swift in Sources */,
+				DAC3212B2CEA665900FE9CFA /* CollectionItemView.swift in Sources */,
 				DAD73E822CE765A400B2A1B1 /* ContentView.swift in Sources */,
 				DAC321242CE9F66E00FE9CFA /* UserCollectionViewModel.swift in Sources */,
 				DAD73E802CE765A400B2A1B1 /* identify_antiqueApp.swift in Sources */,
 				DA2568532CE8E99500E29243 /* MainPopularSection.swift in Sources */,
 				DA31416E2CE8ADC7009D52B2 /* MainTopView.swift in Sources */,
+				DAC321282CEA1B1700FE9CFA /* CollectionsListView.swift in Sources */,
 				DA25685E2CE8FCF500E29243 /* UserCollectionStatistics.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -391,6 +401,7 @@
 				DEVELOPMENT_TEAM = 79D4DF9CQ8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "identify-antique/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Indentify Antique";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -398,6 +409,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -427,6 +439,7 @@
 				DEVELOPMENT_TEAM = 79D4DF9CQ8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "identify-antique/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Indentify Antique";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -434,6 +447,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
