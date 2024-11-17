@@ -3,6 +3,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var isCreateCollectionSheetPresented: Bool = false
+    
     @State private var selectedTab: Tab = .main
     
     init() {
@@ -15,12 +17,8 @@ struct ContentView: View {
                     TabView(selection: $selectedTab){
                         if selectedTab == .main {
                             MainView()
-                                .frame(width: geometry.size.width,height: geometry.size.height)
-                                .background(.green)
                         } else {
-                            CollectionView()
-                                .frame(width: geometry.size.width,height: geometry.size.height)
-                                .background(.red)
+                            UserCollectionView(isCreateCollectionPresented: $isCreateCollectionSheetPresented)
                         }
                     }
                     Spacer()
@@ -28,20 +26,15 @@ struct ContentView: View {
                 VStack {
                     TabNavigationBar(selectedTab: $selectedTab, geometry: geometry)
                 }
-            }.frame(maxHeight: .infinity)
+            }
+            .frame(maxHeight: .infinity)
+            .sheet(isPresented: $isCreateCollectionSheetPresented) {
+                isCreateCollectionSheetPresented = false
+            } content: {
+                CreateCollectionSheet()
+                    .presentationDetents([.fraction(0.7)])
+            }
         }
-    }
-}
-
-struct MainView: View {
-    var body: some View {
-        Text("Main")
-    }
-}
-
-struct CollectionView: View {
-    var body: some View {
-        Text("Collection")
     }
 }
 

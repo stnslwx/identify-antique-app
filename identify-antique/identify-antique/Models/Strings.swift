@@ -9,3 +9,28 @@ struct OnboardingStrings {
         "SUBSCRIPTION HERE"
     ]
 }
+
+struct MainScreenPopular {
+    let popularItems: [PopularItem] = [
+        PopularItem(name: "Vases",   image: "popular1"),
+        PopularItem(name: "Teapots", image: "popular2"),
+        PopularItem(name: "Mirrors", image: "popular3"),
+        PopularItem(name: "Plates",  image: "popular4"),
+        PopularItem(name: "Clock",   image: "popular5"),
+        PopularItem(name: "Mirrors", image: "popular6")
+    ]
+}
+
+struct MainScreenArticles {
+    let articles: [Article] = [
+        Article(title: "How much is your antique worth? How to find..",
+                text: "Whether you are a collector of antiques or have some items from the past..",
+                image: "article"),
+        Article(title: "How much is your antique worth? How to find..",
+                text: "Whether you are a collector of antiques or have some items from the past..",
+                image: "article"),
+        Article(title: "How much is your antique worth? How to find..",
+                text: "Whether you are a collector of antiques or have some items from the past..",
+                image: "article")
+    ]
+}

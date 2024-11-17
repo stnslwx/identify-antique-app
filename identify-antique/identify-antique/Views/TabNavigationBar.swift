@@ -5,7 +5,7 @@ enum Tab: String, CaseIterable {
     case collection
 }
 
-struct TabNavigationBar: View {
+struct TabNavigationBar: View {    
     @Binding var selectedTab: Tab
     let geometry: GeometryProxy
     private var fillImage: String {
@@ -26,7 +26,7 @@ struct TabNavigationBar: View {
             }
         }
         .padding(.horizontal, 50)
-        .frame(width: geometry.size.width, height: geometry.size.height * 0.12)
+        .frame(width: geometry.size.width, height: geometry.size.height * 0.11)
         .background(.white)
         .overlay(alignment: .top) {
             ScanButton()
