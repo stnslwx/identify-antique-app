@@ -7,7 +7,8 @@ struct ContentView: View {
 
     @State private var isCreateCollectionSheetPresented: Bool = false
     @State private var isInsideCollectionSheetPresented: Bool = false
-    @State private var isSavinInCollectionSheetPresented: Bool = true
+    @State private var isSavinInCollectionSheetPresented: Bool = false
+    @State private var isSideMenuPresented: Bool = false
     
     @State private var selectedTab: Tab = .main
     
@@ -21,7 +22,7 @@ struct ContentView: View {
                 VStack {
                     TabView(selection: $selectedTab){
                         if selectedTab == .main {
-                            MainView()
+                            MainView(isMenuPresented: $isSideMenuPresented)
                         } else {
                             UserCollectionView(
                                 collectionVm: collectionVm,
@@ -34,6 +35,7 @@ struct ContentView: View {
                 VStack {
                     TabNavigationBar(selectedTab: $selectedTab, geometry: geometry)
                 }
+                SideMenu(geometry: geometry)
             }
             .frame(maxHeight: .infinity)
             .sheet(isPresented: $isCreateCollectionSheetPresented) {
@@ -53,7 +55,16 @@ struct ContentView: View {
             } content: {
                 SaveInCollectionSheet(collectionsVm: collectionVm, isCreateCollectionPresented: $isCreateCollectionSheetPresented)
             }
+            
         }
+    }
+    
+    @ViewBuilder
+    private func SideMenu (geometry: GeometryProxy) -> some View {
+        SideMenuView(content: {
+            SideMenuContentView(presentSideMenu: $isSideMenuPresented)
+                .frame(width: geometry.size.width * 0.75)
+        }, isSideMenuPresented: $isSideMenuPresented, diriection: .trailing)
     }
 }
 

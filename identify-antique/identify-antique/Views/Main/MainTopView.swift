@@ -1,13 +1,14 @@
 import SwiftUI
 
 struct MainTopView: View {
+    @Binding var isMenuPresented: Bool
     let geometry: GeometryProxy
     var body: some View {
         VStack(spacing: 20) {
             HStack {
-                MainTopButton(name: "info")
+                MainTopButton(name: "info", action: {print("info")})
                 Spacer()
-                MainTopButton(name: "settings")
+                MainTopButton(name: "settings", action: {isMenuPresented = true})
             }.padding(.top, 5)
             Spacer()
             HStack {

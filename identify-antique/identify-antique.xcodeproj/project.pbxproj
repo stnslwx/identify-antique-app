@@ -19,6 +19,8 @@
 		DA31416E2CE8ADC7009D52B2 /* MainTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA31416D2CE8ADC7009D52B2 /* MainTopView.swift */; };
 		DA3141702CE8AE1D009D52B2 /* MainTopButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA31416F2CE8AE1C009D52B2 /* MainTopButton.swift */; };
 		DA3141722CE8C083009D52B2 /* MainActiveSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA3141712CE8C083009D52B2 /* MainActiveSection.swift */; };
+		DA5B53C32CEDBA34009D6812 /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5B53C22CEDBA34009D6812 /* SideMenuView.swift */; };
+		DA5B53C62CEDBF67009D6812 /* SideMenuContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5B53C52CEDBF67009D6812 /* SideMenuContentView.swift */; };
 		DA97A27C2CEB489200B4FA30 /* ItemInfoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA97A27B2CEB489200B4FA30 /* ItemInfoButton.swift */; };
 		DA97A27E2CEBA3AA00B4FA30 /* InsideCollectionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA97A27D2CEBA3AA00B4FA30 /* InsideCollectionSheet.swift */; };
 		DA97A2802CEC947700B4FA30 /* SaveInCollectionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA97A27F2CEC947700B4FA30 /* SaveInCollectionSheet.swift */; };
@@ -50,6 +52,8 @@
 		DA31416D2CE8ADC7009D52B2 /* MainTopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTopView.swift; sourceTree = "<group>"; };
 		DA31416F2CE8AE1C009D52B2 /* MainTopButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTopButton.swift; sourceTree = "<group>"; };
 		DA3141712CE8C083009D52B2 /* MainActiveSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainActiveSection.swift; sourceTree = "<group>"; };
+		DA5B53C22CEDBA34009D6812 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
+		DA5B53C52CEDBF67009D6812 /* SideMenuContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuContentView.swift; sourceTree = "<group>"; };
 		DA97A27B2CEB489200B4FA30 /* ItemInfoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemInfoButton.swift; sourceTree = "<group>"; };
 		DA97A27D2CEBA3AA00B4FA30 /* InsideCollectionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsideCollectionSheet.swift; sourceTree = "<group>"; };
 		DA97A27F2CEC947700B4FA30 /* SaveInCollectionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveInCollectionSheet.swift; sourceTree = "<group>"; };
@@ -111,6 +115,15 @@
 			path = Main;
 			sourceTree = "<group>";
 		};
+		DA5B53C42CEDBF51009D6812 /* SideMenu */ = {
+			isa = PBXGroup;
+			children = (
+				DA5B53C22CEDBA34009D6812 /* SideMenuView.swift */,
+				DA5B53C52CEDBF67009D6812 /* SideMenuContentView.swift */,
+			);
+			path = SideMenu;
+			sourceTree = "<group>";
+		};
 		DA97A27A2CEB486700B4FA30 /* components */ = {
 			isa = PBXGroup;
 			children = (
@@ -163,6 +176,7 @@
 				DAD73E812CE765A400B2A1B1 /* ContentView.swift */,
 				DAD73E932CE769DF00B2A1B1 /* OnboardingView.swift */,
 				DAD73E972CE7A84D00B2A1B1 /* TabNavigationBar.swift */,
+				DA5B53C42CEDBF51009D6812 /* SideMenu */,
 				DA31416A2CE8AD5A009D52B2 /* Main */,
 				DA25685C2CE8FCCB00E29243 /* UserCollection */,
 			);
@@ -262,10 +276,12 @@
 				DA2568572CE8F3B400E29243 /* Article.swift in Sources */,
 				DAD73E942CE769DF00B2A1B1 /* OnboardingView.swift in Sources */,
 				DA2568602CE9116000E29243 /* CustomPicker.swift in Sources */,
+				DA5B53C32CEDBA34009D6812 /* SideMenuView.swift in Sources */,
 				DA2568592CE8F4FB00E29243 /* MainArticlesView.swift in Sources */,
 				DAC321222CE9E27300FE9CFA /* CreateCollectionSheet.swift in Sources */,
 				DA2568622CE9121500E29243 /* ViewOption.swift in Sources */,
 				DA31416C2CE8AD8D009D52B2 /* MainScrollView.swift in Sources */,
+				DA5B53C62CEDBF67009D6812 /* SideMenuContentView.swift in Sources */,
 				DA3141722CE8C083009D52B2 /* MainActiveSection.swift in Sources */,
 				DA3141702CE8AE1D009D52B2 /* MainTopButton.swift in Sources */,
 				DAD73E9A2CE87B4500B2A1B1 /* MainView.swift in Sources */,
