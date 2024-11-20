@@ -12,7 +12,7 @@ struct SideMenuContentView: View {
                     CloseMenuBtn(action: {presentSideMenu.toggle()}, bg: Color(bgColor))
                     
                 }
-                VStack(spacing: 40) {
+                VStack(alignment: .leading, spacing: 40) {
                     Text("Privacy Policy")
                     Text("Terms of Use")
                     Text("Contact Us")

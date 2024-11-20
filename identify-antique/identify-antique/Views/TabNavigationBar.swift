@@ -7,10 +7,14 @@ enum Tab: String, CaseIterable {
 
 struct TabNavigationBar: View {    
     @Binding var selectedTab: Tab
+    @Binding var openScanner: Bool
+    
     let geometry: GeometryProxy
+    
     private var fillImage: String {
         selectedTab.rawValue + "Fill"
     }
+    
     var body: some View {
         HStack(spacing: 150) {
             ForEach(Tab.allCases, id: \.rawValue) { tab in
@@ -29,7 +33,7 @@ struct TabNavigationBar: View {
         .frame(width: geometry.size.width, height: geometry.size.height * 0.11)
         .background(.white)
         .overlay(alignment: .top) {
-            ScanButton()
+            ScanButton(openScanner: $openScanner)
                 .offset(y: -30)
         }
     }
@@ -39,6 +43,7 @@ struct TabNavigationBar: View {
 
 
 struct ScanButton: View {
+    @Binding var openScanner: Bool
     var body: some View {
         Circle()
             .fill(.white)
@@ -56,6 +61,9 @@ struct ScanButton: View {
                                     .offset(y: 40)
                             }
                     }
+            }
+            .onTapGesture {
+                openScanner = true
             }
     }
 }

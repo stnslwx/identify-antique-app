@@ -9,6 +9,7 @@ struct ContentView: View {
     @State private var isInsideCollectionSheetPresented: Bool = false
     @State private var isSavinInCollectionSheetPresented: Bool = false
     @State private var isSideMenuPresented: Bool = false
+    @State private var openScanner: Bool = false
     
     @State private var selectedTab: Tab = .main
     
@@ -33,7 +34,7 @@ struct ContentView: View {
                     Spacer()
                 }
                 VStack {
-                    TabNavigationBar(selectedTab: $selectedTab, geometry: geometry)
+                    TabNavigationBar(selectedTab: $selectedTab, openScanner: $openScanner, geometry: geometry)
                 }
                 SideMenu(geometry: geometry)
             }
@@ -54,6 +55,11 @@ struct ContentView: View {
                 isSavinInCollectionSheetPresented = false
             } content: {
                 SaveInCollectionSheet(collectionsVm: collectionVm, isCreateCollectionPresented: $isCreateCollectionSheetPresented)
+            }
+            .fullScreenCover(isPresented: $openScanner) {
+                openScanner = false
+            } content: {
+                ScannerView(openScanner: $openScanner)
             }
             
         }
