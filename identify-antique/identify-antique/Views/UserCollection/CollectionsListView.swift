@@ -5,7 +5,11 @@ import SwiftUI
 struct CollectionsListView: View {
     
     @ObservedObject var collectionsVm: UserCollectionViewModel
+    
     @Binding var isCreateCollectionPresented: Bool
+    @Binding var isInsideCollectionPresented: Bool
+    
+    var isSaving: Bool
 
     var body: some View {
         GeometryReader { geometry in
@@ -13,7 +17,7 @@ struct CollectionsListView: View {
             if collectionsVm.collections.count < 5{
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(collectionsVm.collections, id:\.id) { collection in
-                        CollectionDisplay(geometry: geometry, name: collection.name)
+                        CollectionDisplay(isInsideCollectionPresented: $isInsideCollectionPresented, geometry: geometry, name: collection.name)
                     }
                     AddCollectionInsideButton(geometry: geometry, action: {isCreateCollectionPresented = true})
                 }.frame(width: geometry.size.width)
@@ -21,7 +25,7 @@ struct CollectionsListView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     LazyVGrid(columns: columns) {
                         ForEach(collectionsVm.collections, id:\.id) { collection in
-                            CollectionDisplay(geometry: geometry, name: collection.name)
+                            CollectionDisplay(isInsideCollectionPresented: $isInsideCollectionPresented, geometry: geometry, name: collection.name)
                         }
                         AddCollectionInsideButton(geometry: geometry, action: {isCreateCollectionPresented = true})
                     }.frame(width: geometry.size.width)
@@ -32,6 +36,7 @@ struct CollectionsListView: View {
     
     struct CollectionDisplay: View {
         //let collectionItems: [CollectionItem]
+        @Binding var isInsideCollectionPresented: Bool
         let geometry: GeometryProxy
         let name: String
         let items = [1,2,3]
@@ -50,6 +55,9 @@ struct CollectionsListView: View {
                 .cornerRadius(23)
                 .overlay(alignment: .center) {
                     CDSegmentationOverlay(geometry: geometry)
+                }
+                .onTapGesture {
+                    isInsideCollectionPresented = true
                 }
                 Text(name).font(.system(size: 17, weight: .bold)).lineLimit(1).truncationMode(.tail).minimumScaleFactor(0.5)
             }

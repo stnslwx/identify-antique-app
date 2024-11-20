@@ -8,6 +8,9 @@ struct UserCollectionView: View {
     @State private var isCollectionEmpty: Bool = true
     
     @Binding var isCreateCollectionPresented: Bool
+    @Binding var isInsideCollectionPresented: Bool
+    
+    let isSaving = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -19,7 +22,9 @@ struct UserCollectionView: View {
                         EmptyCollectionView(isCreateCollectionPresented: $isCreateCollectionPresented)
                             .padding(.top, 120)
                     } else {
-                        CollectionsListView(collectionsVm: collectionVm, isCreateCollectionPresented: $isCreateCollectionPresented)
+                        CollectionsListView(collectionsVm: collectionVm,
+                                            isCreateCollectionPresented: $isCreateCollectionPresented,
+                                            isInsideCollectionPresented: $isInsideCollectionPresented, isSaving: isSaving)
                     }
                 } else {
                     //User history here

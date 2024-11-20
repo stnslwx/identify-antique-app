@@ -6,12 +6,15 @@ struct ContentView: View {
     @StateObject private var collectionVm = UserCollectionViewModel()
 
     @State private var isCreateCollectionSheetPresented: Bool = false
+    @State private var isInsideCollectionSheetPresented: Bool = false
+    @State private var isSavinInCollectionSheetPresented: Bool = true
     
     @State private var selectedTab: Tab = .main
     
     init() {
         UITabBar.appearance().isHidden = true
     }
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .bottom) {
@@ -20,7 +23,10 @@ struct ContentView: View {
                         if selectedTab == .main {
                             MainView()
                         } else {
-                            UserCollectionView(collectionVm: collectionVm, isCreateCollectionPresented: $isCreateCollectionSheetPresented)
+                            UserCollectionView(
+                                collectionVm: collectionVm,
+                                isCreateCollectionPresented: $isCreateCollectionSheetPresented,
+                                isInsideCollectionPresented: $isInsideCollectionSheetPresented)
                         }
                     }
                     Spacer()
@@ -35,6 +41,17 @@ struct ContentView: View {
             } content: {
                 CreateCollectionSheet(collectionVm: collectionVm)
                     .presentationDetents([.fraction(0.7)])
+            }
+            .sheet(isPresented: $isInsideCollectionSheetPresented){
+                isInsideCollectionSheetPresented = false
+            } content: {
+                InsideCollectionSheet()
+                    .presentationDetents([.fraction(0.95)])
+            }
+            .sheet(isPresented: $isSavinInCollectionSheetPresented){
+                isSavinInCollectionSheetPresented = false
+            } content: {
+                SaveInCollectionSheet(collectionsVm: collectionVm, isCreateCollectionPresented: $isCreateCollectionSheetPresented)
             }
         }
     }

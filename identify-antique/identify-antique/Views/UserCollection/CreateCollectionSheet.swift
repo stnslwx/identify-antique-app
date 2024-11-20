@@ -5,7 +5,7 @@ struct CreateCollectionSheet: View {
     @State private var collectionName: String = ""
     var body: some View {
         VStack {
-            VStack{}.frame(width: 35, height: 3).background(Color("tabGrey")).cornerRadius(20).padding(.bottom, 25)
+            VStack{}.frame(width: 35, height: 3).background(Color("collectionSegmentBg")).cornerRadius(20).padding(.bottom, 25)
             Text("Name the collection").font(.system(size: 18, weight: .bold))
             CollectionNameTextField(text: $collectionName)
             Spacer()
