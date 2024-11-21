@@ -12,7 +12,11 @@ final class ScannerViewModel: NSObject, ObservableObject, AVCapturePhotoCaptureD
     
     @Published var output = AVCapturePhotoOutput()
     
+    @Published var capturedPhoto: UIImage?
+    
     @Published var preview: AVCaptureVideoPreviewLayer!
+    
+    @Published var shouldNavigate = false
     
     func checkCameraAuthorization() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -56,6 +60,7 @@ final class ScannerViewModel: NSObject, ObservableObject, AVCapturePhotoCaptureD
                 self.session.addOutput(output)
             }
             
+            
             self.session.commitConfiguration()
             
         } catch  {
@@ -71,7 +76,7 @@ final class ScannerViewModel: NSObject, ObservableObject, AVCapturePhotoCaptureD
         DispatchQueue.global(qos: .background).async {
             
             self.output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
-            self.session.stopRunning()
+//            self.session.stopRunning()
             
             DispatchQueue.main.async {
                 
@@ -97,7 +102,7 @@ final class ScannerViewModel: NSObject, ObservableObject, AVCapturePhotoCaptureD
 
                 if isOn {
                     if !device.isTorchActive {
-                        try device.setTorchModeOn(level: 1.0) 
+                        try device.setTorchModeOn(level: 1.0)
                     }
                 } else {
                     if device.isTorchActive {
@@ -120,6 +125,17 @@ final class ScannerViewModel: NSObject, ObservableObject, AVCapturePhotoCaptureD
         }
         
         print("Photo Taken >>>")
+        self.session.stopRunning()
+        
+        if let photoData = photo.fileDataRepresentation() {
+            if let image = UIImage(data: photoData) {
+                self.capturedPhoto = image
+                self.shouldNavigate = true
+                print("Photo saved in capturedPhoto variable/ navigate = \(shouldNavigate)")
+                
+            }
+        }
         
     }
+    
 }

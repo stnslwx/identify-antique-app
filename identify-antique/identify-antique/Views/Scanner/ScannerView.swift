@@ -8,40 +8,52 @@ struct ScannerView: View {
     
     @State private var isTorchOn: Bool = false
     
+    var userImage: UIImage? = nil
+    
     var body: some View {
         GeometryReader { geometry in
             
-            VStack(spacing: 0) {
+            NavigationView {
                 
-                Spacer()
-                HStack {
-                    Image("scannerLight").onTapGesture {
-                        scanner.toggleTorch(isOn: !isTorchOn)
-                        isTorchOn.toggle()
-                    }
+                VStack(spacing: 0) {
+                    
                     Spacer()
-                    Image("xmarkWhite").onTapGesture {
-                        openScanner = false
-                        scanner.toggleTorch(isOn: false)
-                        scanner.session.stopRunning()
+                    HStack {
+                        Image("scannerLight").onTapGesture {
+                            scanner.toggleTorch(isOn: !isTorchOn)
+                            isTorchOn.toggle()
+                        }
+                        Spacer()
+                        Image("xmarkWhite").onTapGesture {
+                            openScanner = false
+                            scanner.toggleTorch(isOn: false)
+                            scanner.session.stopRunning()
+                        }
+                    }
+                    .padding(.bottom, 20)
+                    .padding(.horizontal, 20)
+                    .background(.black)
+                    ScannerPreview(scanner: scanner)
+                        .frame(width: geometry.size.width, height: geometry.size.height * 0.75).background(.black)
+                    
+                    VStack {
+                        CaptureBtn(action: {
+                            scanner.takePicture()
+                        })
+                    }.frame(width: geometry.size.width, height: geometry.size.height * 0.15).background(.black)
+                    NavigationLink(destination: LoadingView(scanner: scanner, openScanner: $openScanner) , isActive: $scanner.shouldNavigate) {
+                        EmptyView()
                     }
                 }
-                .padding(.bottom, 20)
-                .padding(.horizontal, 20)
-                .background(.black)
-                ScannerPreview(scanner: scanner)
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.75).background(.black)
-                
-                VStack {
-                    CaptureBtn(action: {scanner.takePicture()})
-                }.frame(width: geometry.size.width, height: geometry.size.height * 0.15).background(.black)
+                .frame(width: geometry.size.width, height: geometry.size.height).background(.black)
                 
             }
-            .frame(width: geometry.size.width, height: geometry.size.height).background(.black)
         }
         .onAppear(perform: {
             scanner.checkCameraAuthorization()
+
         })
+        
     }
     
     struct CaptureBtn: View {

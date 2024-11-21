@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CreateCollectionSheet: View {
     @ObservedObject var collectionVm: UserCollectionViewModel
+    @ObservedObject var collectioSheetsModel: CollectionSheetModel
     @State private var collectionName: String = ""
     var body: some View {
         VStack {
@@ -11,6 +12,7 @@ struct CreateCollectionSheet: View {
             Spacer()
             CreateCollectionButton(collectionName: $collectionName, action: {
                 collectionVm.addCollection(name: collectionName)
+                collectioSheetsModel.isCreateCollPresent = false
                 print("add collection btn: \(collectionName)")
             })
         }
@@ -51,7 +53,9 @@ struct CreateCollectionSheet: View {
                     }
                 })
                 .cornerRadius(34)
-            }.disabled(collectionName.isEmpty)
+            }
+            .disabled(collectionName.isEmpty)
+            .padding(.bottom, 10)
         }
     }
 }

@@ -2,9 +2,6 @@ import SwiftUI
 
 struct SaveInCollectionSheet: View {
     @ObservedObject var collectionsVm: UserCollectionViewModel
-
-    @Binding var isCreateCollectionPresented: Bool
-    @State private var isInsideCollectionPresented = false
     
     let isSaving = true
     var body: some View {
@@ -15,10 +12,7 @@ struct SaveInCollectionSheet: View {
                 
                 Text("Save in").font(.system(size: 18, weight: .bold))
                 
-                CollectionsListView(collectionsVm: collectionsVm,
-                                    isCreateCollectionPresented: $isInsideCollectionPresented,
-                                    isInsideCollectionPresented: $isInsideCollectionPresented,
-                                    isSaving: isSaving)
+                //CollectionsListView(collectionsVm: collectionsVm, isSaving: isSaving)
                 
                 Spacer()
                 

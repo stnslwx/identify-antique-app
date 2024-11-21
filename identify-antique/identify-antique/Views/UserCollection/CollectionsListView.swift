@@ -5,9 +5,7 @@ import SwiftUI
 struct CollectionsListView: View {
     
     @ObservedObject var collectionsVm: UserCollectionViewModel
-    
-    @Binding var isCreateCollectionPresented: Bool
-    @Binding var isInsideCollectionPresented: Bool
+    @ObservedObject var collectionSheetsModel: CollectionSheetModel
     
     var isSaving: Bool
 
@@ -17,17 +15,25 @@ struct CollectionsListView: View {
             if collectionsVm.collections.count < 5{
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(collectionsVm.collections, id:\.id) { collection in
-                        CollectionDisplay(isInsideCollectionPresented: $isInsideCollectionPresented, geometry: geometry, name: collection.name)
+                        CollectionDisplay(geometry: geometry, name: collection.name)
+                            .onTapGesture {
+                                collectionsVm.selectedCollection = collection
+                                collectionSheetsModel.isInsideCollPresented = true
+                            }
                     }
-                    AddCollectionInsideButton(geometry: geometry, action: {isCreateCollectionPresented = true})
+                    AddCollectionInsideButton(geometry: geometry, action: {collectionSheetsModel.isCreateCollPresent = true})
                 }.frame(width: geometry.size.width)
             } else {
                 ScrollView(.vertical, showsIndicators: false) {
                     LazyVGrid(columns: columns) {
                         ForEach(collectionsVm.collections, id:\.id) { collection in
-                            CollectionDisplay(isInsideCollectionPresented: $isInsideCollectionPresented, geometry: geometry, name: collection.name)
+                            CollectionDisplay(geometry: geometry, name: collection.name)
+                                .onTapGesture {
+                                    collectionsVm.selectedCollection = collection
+                                    collectionSheetsModel.isInsideCollPresented = true
+                                }
                         }
-                        AddCollectionInsideButton(geometry: geometry, action: {isCreateCollectionPresented = true})
+                        AddCollectionInsideButton(geometry: geometry, action: {collectionSheetsModel.isCreateCollPresent = true})
                     }.frame(width: geometry.size.width)
                 }
             }
@@ -36,7 +42,7 @@ struct CollectionsListView: View {
     
     struct CollectionDisplay: View {
         //let collectionItems: [CollectionItem]
-        @Binding var isInsideCollectionPresented: Bool
+
         let geometry: GeometryProxy
         let name: String
         let items = [1,2,3]
@@ -55,9 +61,6 @@ struct CollectionsListView: View {
                 .cornerRadius(23)
                 .overlay(alignment: .center) {
                     CDSegmentationOverlay(geometry: geometry)
-                }
-                .onTapGesture {
-                    isInsideCollectionPresented = true
                 }
                 Text(name).font(.system(size: 17, weight: .bold)).lineLimit(1).truncationMode(.tail).minimumScaleFactor(0.5)
             }

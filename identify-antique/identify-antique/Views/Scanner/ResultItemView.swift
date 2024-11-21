@@ -1,31 +1,31 @@
 import SwiftUI
 
-struct CollectionItemView: View {
+struct ResultItemView: View {
     
-    @ObservedObject var collectionVm: UserCollectionViewModel
-    @ObservedObject var collectionSheetModel: CollectionSheetModel
-        
+    @ObservedObject private var collectionVm = UserCollectionViewModel()
+    
+    @Environment(\.presentationMode) var presentationMode
+    
+    let isConfirmationalView: Bool
     let similarItems: [Int] = [1,2,3,4,5]
     
-    @Binding var showInfo: Bool
+    @Binding var openScanner: Bool
     
     @State private var isSavinInCollectionSheetPresented: Bool = false
     @State private var isCreateCollectionSheetPresented: Bool = false
-    @State private var isItemSaved: Bool = false
-    
+
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 16) {
                     VStack(spacing: 16) {
-                        if let selectedItem = collectionVm.selectedItem {
-                            CollItemTopBar(
-                                itemName: selectedItem.name,
-                                isItemSaved: $isItemSaved,
-                                navAction: {showInfo = false},
-                                addAction: {isSavinInCollectionSheetPresented = true},
-                                closeAction: {showInfo = false})
-                        }
+                        CollItemTopBar(
+                            itemName: "Hoff Sofa",
+                            isConfirmational: isConfirmationalView,
+                            openScanner: $openScanner,
+                            navAction: {presentationMode.wrappedValue.dismiss()},
+                            addAction: {isSavinInCollectionSheetPresented = true},
+                            closeAction: {openScanner = false})
                         ItemImageView()
                         ItemStatistics(geometry: geometry)
                         AILabels()
@@ -36,23 +36,22 @@ struct CollectionItemView: View {
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             .background(Color("mainBgColor"))
-        }
-        .navigationBarBackButtonHidden(true)
-        .sheet(isPresented: $collectionSheetModel.saveInCollPresented){
-            collectionSheetModel.saveInCollPresented = false
-        } content: {
-            SaveInCollectionSheet(collectionsVm: collectionVm)
-                .presentationDetents([.fraction(0.85)])
-        }
+        }.navigationBarBackButtonHidden(true)
+            .sheet(isPresented: $isSavinInCollectionSheetPresented){
+                isSavinInCollectionSheetPresented = false
+            } content: {
+                SaveInCollectionSheet(collectionsVm: collectionVm)
+                    .presentationDetents([.fraction(0.85)])
+            }
     }
     
     // Title & buttons
     struct CollItemTopBar: View {
         
         let itemName: String
+        let isConfirmational: Bool
         
-        @Binding var isItemSaved: Bool
-        
+        @Binding var openScanner: Bool
         
         let navAction: () -> Void
         let addAction: () -> Void
@@ -64,7 +63,7 @@ struct CollectionItemView: View {
                 Spacer()
                 Text(itemName).font(.system(size: 20, weight: .bold))
                 Spacer()
-                if isItemSaved {
+                if isConfirmational {
                     ItemInfoButton(action: closeAction, icon: "tick", isSecondary: false)
                 } else {
                     ItemInfoButton(action: addAction, icon: "plus", isSecondary: false)
@@ -178,7 +177,7 @@ struct CollectionItemView: View {
                     HStack(spacing: 15) {
                         ForEach(items, id:\.self) { item in
                             VStack(alignment: .leading) {
-                                Image("article")
+                                Image("")
                                     .frame(width: geometry.size.width/2 - 30, height: 190)
                                     .background(Color("similarItemsBg"))
                                     .cornerRadius(14)

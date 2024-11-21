@@ -4,15 +4,15 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var collectionVm = UserCollectionViewModel()
+    @StateObject private var collectionSheetModel = CollectionSheetModel()
 
-    @State private var isCreateCollectionSheetPresented: Bool = false
-    @State private var isInsideCollectionSheetPresented: Bool = false
-    @State private var isSavinInCollectionSheetPresented: Bool = false
     @State private var isSideMenuPresented: Bool = false
     @State private var openScanner: Bool = false
+   // @State private var showItemInfo: Bool = false
+
     
     @State private var selectedTab: Tab = .main
-    
+        
     init() {
         UITabBar.appearance().isHidden = true
     }
@@ -26,9 +26,7 @@ struct ContentView: View {
                             MainView(isMenuPresented: $isSideMenuPresented)
                         } else {
                             UserCollectionView(
-                                collectionVm: collectionVm,
-                                isCreateCollectionPresented: $isCreateCollectionSheetPresented,
-                                isInsideCollectionPresented: $isInsideCollectionSheetPresented)
+                                collectionVm: collectionVm, collectionSheetModel: collectionSheetModel)
                         }
                     }
                     Spacer()
@@ -39,28 +37,29 @@ struct ContentView: View {
                 SideMenu(geometry: geometry)
             }
             .frame(maxHeight: .infinity)
-            .sheet(isPresented: $isCreateCollectionSheetPresented) {
-                isCreateCollectionSheetPresented = false
+            .sheet(isPresented: $collectionSheetModel.isCreateCollPresent) {
+                collectionSheetModel.isCreateCollPresent = false
             } content: {
-                CreateCollectionSheet(collectionVm: collectionVm)
+                CreateCollectionSheet(collectionVm: collectionVm, collectioSheetsModel: collectionSheetModel)
                     .presentationDetents([.fraction(0.7)])
             }
-            .sheet(isPresented: $isInsideCollectionSheetPresented){
-                isInsideCollectionSheetPresented = false
+            .sheet(isPresented: $collectionSheetModel.isInsideCollPresented){
+                collectionSheetModel.isInsideCollPresented = false
             } content: {
-                InsideCollectionSheet()
+                InsideCollectionSheet(collectionsVm: collectionVm, collectionSheetModel: collectionSheetModel)
                     .presentationDetents([.fraction(0.95)])
-            }
-            .sheet(isPresented: $isSavinInCollectionSheetPresented){
-                isSavinInCollectionSheetPresented = false
-            } content: {
-                SaveInCollectionSheet(collectionsVm: collectionVm, isCreateCollectionPresented: $isCreateCollectionSheetPresented)
             }
             .fullScreenCover(isPresented: $openScanner) {
                 openScanner = false
             } content: {
                 ScannerView(openScanner: $openScanner)
             }
+//            .fullScreenCover(isPresented: $showItemInfo) {
+//                showItemInfo = false
+//            } content: {
+//                CollectionItemView(showInfo: $showItemInfo)
+//                    .presentationDetents([.fraction(1)])
+//            }
             
         }
     }
