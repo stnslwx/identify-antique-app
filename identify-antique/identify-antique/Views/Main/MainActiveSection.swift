@@ -1,10 +1,12 @@
 import SwiftUI
 
 struct MainActiveSection: View {
+    @Binding var openScanner: Bool
+
     var body: some View {
         VStack(spacing: 14) {
             GetFullAccessSection()
-            ScanNowSection()
+            ScanNowSection(openScanner: $openScanner)
         }
     }
 }
@@ -42,6 +44,7 @@ struct GetFullAccessSection: View {
 }
 
 struct ScanNowSection: View {
+    @Binding var openScanner: Bool
     var body: some View {
         HStack {
             VStack(alignment: .leading){
@@ -49,7 +52,9 @@ struct ScanNowSection: View {
                 Spacer()
                 Text("Take photos and expand your collection").font(.system(size: 15, weight: .regular, design: .default)).lineLimit(nil) .multilineTextAlignment(.leading).frame(width: 160).foregroundColor(Color("textGray"))
                 Spacer()
-                SectionButton(action: {print("GetFullAcces")}, label: "Scan now", size: (136,46), textColor: .white, background: true)
+                SectionButton(action: {
+                    openScanner = true
+                }, label: "Scan now", size: (136,46), textColor: .white, background: true)
             }.foregroundColor(.black)
             Spacer()
         }
@@ -95,9 +100,4 @@ struct SectionButton: View {
             .cornerRadius(23)
         }
     }
-}
-
-
-#Preview {
-    MainActiveSection()
 }

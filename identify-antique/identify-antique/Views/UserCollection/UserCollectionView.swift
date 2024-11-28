@@ -14,8 +14,8 @@ struct UserCollectionView: View {
         GeometryReader { geometry in
             VStack(spacing: 15) {
                 CustomPicker(selectedOption: $selectedOption)
-                UserCollectionStatistics(antiqueCount: 0, coutriesCount: 0, collectionsCount: collectionVm.collections.count)
                 if selectedOption == .collection {
+                    UserCollectionStatistics(antiqueCount: 0, coutriesCount: 0, collectionsCount: collectionVm.collections.count)
                     if collectionVm.collections.isEmpty {
                         EmptyCollectionView(collectionSheetModel: collectionSheetModel)
                             .padding(.top, 120)
@@ -33,7 +33,7 @@ struct UserCollectionView: View {
             .overlay(alignment: .bottom) {
                 ConfirmationToast(text: "New collection added")
                     .padding(.bottom, collectionVm.showToast ? 150 : 0)
-                    .animation(.easeInOut(duration: 1), value: collectionVm.showToast)
+                    .animation(.easeInOut(duration: 0.5), value: collectionVm.showToast)
             }
         }
     }

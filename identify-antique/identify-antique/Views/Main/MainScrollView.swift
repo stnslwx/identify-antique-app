@@ -1,13 +1,15 @@
 import SwiftUI
 
 struct MainScrollView: View {
+    @ObservedObject var sheetModel: CollectionSheetModel
     let geometry: GeometryProxy
+    @Binding var openScanner: Bool
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 14) {
-                MainActiveSection()
-                MainPopularSection()
-                MainArticlesView()
+                MainActiveSection(openScanner: $openScanner)
+                MainPopularSection(openScanner: $openScanner)
+                MainArticlesView(sheetModel: sheetModel)
             }.padding(.bottom, 140)
         }
         .padding()

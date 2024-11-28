@@ -8,9 +8,10 @@ struct InsideCollectionSheet: View {
     //@Binding var showItemInfo: Bool
     
     @State private var showItemInfo: Bool = false
+    @State private var showDeleteBtn: Bool = false
     
     var body: some View {
-        let columns = [GridItem(.flexible()), GridItem(.flexible())]
+        let columns = [GridItem(.fixed(160)), GridItem(.fixed(160))]
         GeometryReader { geometry in
             VStack(spacing: 20) {
                 
@@ -18,33 +19,53 @@ struct InsideCollectionSheet: View {
                 
                 HStack {
                     Spacer()
-                    Text(collectionsVm.selectedCollection!.name).font(.system(size: 18, weight: .bold))
+                    if let selectedCollection = collectionsVm.selectedCollection {
+                        Text(selectedCollection.name).font(.system(size: 18, weight: .bold))
+                    }
                     Spacer()
-                    TrippleDotsButton(action: {print("tripple dots button inside collection")})
+                    TrippleDotsButton(action: {
+                        showDeleteBtn.toggle()
+                        print("tripple dots button inside collection")
+                    })
+                    .overlay(alignment: .trailing) {
+                        if showDeleteBtn {
+                            DeleteBtn(action: {
+                                print("delete btn")
+                                collectionSheetModel.isInsideCollPresented = false
+                                collectionsVm.deleteCollection()
+                            })
+                                .zIndex(15)
+                                .offset(y: 45)
+                        }
+                    }
                 }
+                .zIndex(10)
                 
                 LazyVGrid(columns: columns) {
                     if let selectedCollection = collectionsVm.selectedCollection {
-                        ForEach(selectedCollection.items, id: \.id) { item in
-                            InsideCollectionItem(geometry: geometry, name: item.name)
+                        ForEach(selectedCollection.items.indices, id: \.self) { index in
+                            let item = selectedCollection.items[index]
+                            InsideCollectionItem(geometry: geometry, name: item.name, image: item.getImage())
+                                .frame(width: 160, height: 160)
                                 .onTapGesture {
                                     collectionsVm.selectedItem = item
                                     //collectionSheetModel.isInsideCollPresented = false
-                                    showItemInfo = true
+                                    collectionSheetModel.showInfo = true
                                 }
                         }
                     }
                 }
+                .padding(.top, 30)
                 
                 Spacer()
                 
             }
             .padding(.horizontal, 20).padding(.top, 15)
         }
-        .fullScreenCover(isPresented: $showItemInfo) {
-            showItemInfo = false
+        .fullScreenCover(isPresented: $collectionSheetModel.showInfo) {
+            collectionSheetModel.showInfo = false
         } content: {
-            CollectionItemView(collectionVm: collectionsVm, collectionSheetModel: collectionSheetModel, showInfo: $showItemInfo)
+            CollectionItemView(collectionVm: collectionsVm, collectionSheetModel: collectionSheetModel)
                 .presentationDetents([.fraction(1)])
         }
     }
@@ -61,13 +82,35 @@ struct InsideCollectionSheet: View {
     struct InsideCollectionItem: View {
         let geometry: GeometryProxy
         let name: String
+        let image: UIImage
         var body: some View {
             VStack {
-                Text(name)
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 160, height: 160)
+                    .clipped()
+                    .background(Color("collectionSegmentBg"))
+                    .cornerRadius(23)
+                    .contentShape(Rectangle()) 
             }
-            .frame(width: geometry.size.width/2 - 27, height: geometry.size.width/2 - 27)
-            .background(Color("collectionSegmentBg"))
-            .cornerRadius(23)
+            .frame(width: 160, height: 160)
+            .clipped()
+        }
+    }
+    
+    struct DeleteBtn: View {
+        let action: () -> Void
+        var body: some View {
+            Button(action: action) {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(.white)
+                    .frame(width: 160, height: 50)
+                    .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 4)
+                    .overlay(alignment: .center) {
+                        Text("Delete Collection").foregroundStyle(.black).font(.system(size: 18))
+                    }
+            }
         }
     }
 }

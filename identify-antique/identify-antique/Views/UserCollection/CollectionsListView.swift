@@ -13,29 +13,59 @@ struct CollectionsListView: View {
         GeometryReader { geometry in
             let columns = [GridItem(.flexible()), GridItem(.flexible())]
             if collectionsVm.collections.count < 5{
+                
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(collectionsVm.collections, id:\.id) { collection in
-                        CollectionDisplay(geometry: geometry, name: collection.name)
+                        CollectionDisplay(geometry: geometry, name: collection.name, isSaving: isSaving,
+                                          selectedColl: collectionsVm.selectedCollForSaving, currentColl: collection)
                             .onTapGesture {
-                                collectionsVm.selectedCollection = collection
-                                collectionSheetsModel.isInsideCollPresented = true
-                            }
-                    }
-                    AddCollectionInsideButton(geometry: geometry, action: {collectionSheetsModel.isCreateCollPresent = true})
-                }.frame(width: geometry.size.width)
-            } else {
-                ScrollView(.vertical, showsIndicators: false) {
-                    LazyVGrid(columns: columns) {
-                        ForEach(collectionsVm.collections, id:\.id) { collection in
-                            CollectionDisplay(geometry: geometry, name: collection.name)
-                                .onTapGesture {
+                                if isSaving {
+                                    collectionsVm.selectedCollForSaving = collection
+                                } else {
                                     collectionsVm.selectedCollection = collection
                                     collectionSheetsModel.isInsideCollPresented = true
                                 }
+                            }
+                    }
+                    AddCollectionInsideButton(geometry: geometry, action: {
+                        if isSaving {
+                            collectionSheetsModel.saveInCollPresented = false
+                            collectionSheetsModel.isCreatingCollFromItem = true
+                        } else {
+                            collectionSheetsModel.isCreateCollPresent = true
+
                         }
-                        AddCollectionInsideButton(geometry: geometry, action: {collectionSheetsModel.isCreateCollPresent = true})
+                    })
+                }.frame(width: geometry.size.width)
+                
+            } else {
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVGrid(columns: columns, spacing: 10) {
+                        ForEach(collectionsVm.collections, id:\.id) { collection in
+                            CollectionDisplay(geometry: geometry, name: collection.name, isSaving: isSaving,
+                                              selectedColl: collectionsVm.selectedCollForSaving, currentColl: collection)
+                                .onTapGesture {
+                                    if isSaving {
+                                        collectionsVm.selectedCollForSaving = collection
+                                    } else {
+                                        collectionsVm.selectedCollection = collection
+                                        collectionSheetsModel.isInsideCollPresented = true
+                                    }
+                                }
+                        }
+                        AddCollectionInsideButton(geometry: geometry, action: {
+                            if isSaving {
+                                collectionSheetsModel.saveInCollPresented = false
+                                collectionSheetsModel.isCreatingCollFromItem = true
+                            } else {
+                                collectionSheetsModel.isCreateCollPresent = true
+
+                            }
+                        })
                     }.frame(width: geometry.size.width)
                 }
+                
             }
         }
     }
@@ -45,14 +75,44 @@ struct CollectionsListView: View {
 
         let geometry: GeometryProxy
         let name: String
-        let items = [1,2,3]
+        let items = [1]
+        
+        let isSaving: Bool
+        var selectedColl: Collection?
+        var currentColl: Collection
+        
         var body: some View {
-            let columns = [GridItem(.flexible()), GridItem(.flexible())]
-            VStack{
-                LazyVGrid(columns: columns){
-                    ForEach(Array(items).prefix(4), id:\.self) { item in
-                        VStack{
-                            Image("popular1")
+            let columns = [GridItem(.flexible(), spacing: 0), GridItem(.flexible(), spacing: 0)]
+            VStack(spacing: 10){
+                LazyVGrid(columns: columns, spacing: 0){
+                    if currentColl.items.count < 3 {
+                        ForEach(currentColl.items.indices.prefix(4), id: \.self) { index in
+                            let item = currentColl.items[index]
+                            VStack {
+                                Image(uiImage: item.getImage())
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: geometry.size.width/4 - 3, height: geometry.size.width/4)
+                                    .clipped()
+                            }
+                        }
+                        ForEach(0..<2) { _ in
+                            VStack {
+                                   RoundedRectangle(cornerRadius: 0).fill(Color.clear) // Прозрачные ячейки для заполнения
+                                       .frame(width: geometry.size.width/4, height: geometry.size.width/4)
+                                       //.frame(width: 50, height: 50)
+                               }
+                        }
+                    } else {
+                        ForEach(currentColl.items.indices.prefix(4), id: \.self) { index in
+                            let item = currentColl.items[index]
+                            VStack {
+                                Image(uiImage: item.getImage())
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: geometry.size.width/4, height: geometry.size.width/4)
+                                    .clipped()
+                            }
                         }
                     }
                 }
@@ -61,6 +121,16 @@ struct CollectionsListView: View {
                 .cornerRadius(23)
                 .overlay(alignment: .center) {
                     CDSegmentationOverlay(geometry: geometry)
+                        .overlay(alignment: .center) {
+                            if isSaving {
+                                if let selectedColl = selectedColl {
+                                    if selectedColl.id == currentColl.id {
+                                        Circle().fill(Color("accentGreen")).frame(width: 54, height: 54)
+                                            .overlay(alignment: .center) {Image("tickWhite").resizable().frame(width: 17, height: 13)}
+                                    }
+                                }
+                            }
+                        }
                 }
                 Text(name).font(.system(size: 17, weight: .bold)).lineLimit(1).truncationMode(.tail).minimumScaleFactor(0.5)
             }
@@ -79,7 +149,7 @@ struct CollectionsListView: View {
             }
         }
     }
-    
+
     struct AddCollectionInsideButton: View {
         let geometry: GeometryProxy
         let action: ()->Void
@@ -95,4 +165,6 @@ struct CollectionsListView: View {
             .frame(width: geometry.size.width/2 - 30, height: geometry.size.width/2 - 30)
         }
     }
+
 }
+

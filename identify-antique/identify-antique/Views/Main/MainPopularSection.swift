@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MainPopularSection: View {
+    @Binding var openScanner: Bool
     let columns = [
            GridItem(.flexible()),
            GridItem(.flexible()),
@@ -29,6 +30,9 @@ struct MainPopularSection: View {
                             .font(.system(size: 19, weight: .medium, design: .default))
                             .multilineTextAlignment(.center)
                     }
+                    .onTapGesture {
+                        openScanner = true
+                    }
                 }
             }
         }
@@ -38,8 +42,4 @@ struct MainPopularSection: View {
         .background(.white)
         .cornerRadius(23)
     }
-}
-
-#Preview {
-    MainPopularSection()
 }

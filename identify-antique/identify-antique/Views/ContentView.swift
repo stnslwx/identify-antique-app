@@ -1,15 +1,14 @@
-
-
 import SwiftUI
 
 struct ContentView: View {
+    
+    @AppStorage("isOnboardingShowing") var isOnboardingShowing: Bool = true
+    
     @StateObject private var collectionVm = UserCollectionViewModel()
     @StateObject private var collectionSheetModel = CollectionSheetModel()
 
     @State private var isSideMenuPresented: Bool = false
     @State private var openScanner: Bool = false
-   // @State private var showItemInfo: Bool = false
-
     
     @State private var selectedTab: Tab = .main
         
@@ -23,7 +22,7 @@ struct ContentView: View {
                 VStack {
                     TabView(selection: $selectedTab){
                         if selectedTab == .main {
-                            MainView(isMenuPresented: $isSideMenuPresented)
+                            MainView(sheetModel: collectionSheetModel, isMenuPresented: $isSideMenuPresented, openScanner: $openScanner)
                         } else {
                             UserCollectionView(
                                 collectionVm: collectionVm, collectionSheetModel: collectionSheetModel)
@@ -40,8 +39,9 @@ struct ContentView: View {
             .sheet(isPresented: $collectionSheetModel.isCreateCollPresent) {
                 collectionSheetModel.isCreateCollPresent = false
             } content: {
-                CreateCollectionSheet(collectionVm: collectionVm, collectioSheetsModel: collectionSheetModel)
+                CreateCollectionSheet(collectionVm: collectionVm, collectioSheetsModel: collectionSheetModel, isSaving: false)
                     .presentationDetents([.fraction(0.7)])
+
             }
             .sheet(isPresented: $collectionSheetModel.isInsideCollPresented){
                 collectionSheetModel.isInsideCollPresented = false
@@ -52,15 +52,17 @@ struct ContentView: View {
             .fullScreenCover(isPresented: $openScanner) {
                 openScanner = false
             } content: {
-                ScannerView(openScanner: $openScanner)
+                ScannerView(collectionVm: collectionVm,collectionSheetModel: collectionSheetModel,openScanner: $openScanner)
             }
-//            .fullScreenCover(isPresented: $showItemInfo) {
-//                showItemInfo = false
-//            } content: {
-//                CollectionItemView(showInfo: $showItemInfo)
-//                    .presentationDetents([.fraction(1)])
-//            }
-            
+            .fullScreenCover(isPresented: $isOnboardingShowing) {
+                OnboardingView(isOnboardingShowing: $isOnboardingShowing)
+                    .presentationDetents([.fraction(1)])
+            }
+            .fullScreenCover(isPresented: $collectionSheetModel.isArticleViewPresented) {
+                collectionSheetModel.isArticleViewPresented = false
+            } content: {
+                FullArticleView(sheetModel: collectionSheetModel)
+            }
         }
     }
     

@@ -1,10 +1,16 @@
 import SwiftUI
 
 struct OnboardingView: View {
+    
+    @Binding var isOnboardingShowing: Bool
+    
     @State private var currentPage = 0
+    @State private var showCloseBtn: Bool = false
+    
     let totalPages = 4
     let pageTitles = OnboardingStrings().pageTitles
     let pageDescriptions = OnboardingStrings().pageDescriptions
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment:.bottom) {
@@ -12,14 +18,25 @@ struct OnboardingView: View {
                     ForEach(0..<totalPages, id: \.self) { index in
                         OnboardingImageView(geometry: geometry, imageName: "ob\(index + 1)")
                             .tag(index)
+                            .overlay(alignment: .topTrailing) {
+                                if currentPage == 3 {
+                                    if showCloseBtn {
+                                        Image("xmarkGray").resizable().frame(width: 14, height: 14).padding(.top,20).padding(.trailing,20)
+                                            .onTapGesture {
+                                                isOnboardingShowing = false
+                                            }
+                                    }
+                                }
+                            }
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .edgesIgnoringSafeArea(.top)
                 
-                OnboardingInterface(geometry: geometry, currentPage: $currentPage, totalPages: totalPages, title: pageTitles[currentPage], description: pageDescriptions[currentPage])
+                OnboardingInterface(geometry: geometry, currentPage: $currentPage, showCloseBtn: $showCloseBtn, totalPages: totalPages, title: pageTitles[currentPage], description: pageDescriptions[currentPage])
             
-            }.frame(maxHeight: .infinity)
+            }
+            .frame(maxHeight: .infinity)
         }
     }
 }
@@ -27,6 +44,7 @@ struct OnboardingView: View {
 struct OnboardingInterface: View {
     let geometry: GeometryProxy
     @Binding var currentPage: Int
+    @Binding var showCloseBtn: Bool
     let totalPages: Int
     let title: String
     let description: String
@@ -53,7 +71,9 @@ struct OnboardingInterface: View {
                 }
             }
             Spacer()
-            ContinueButton(action: {nextPage()}, geometry: geometry)
+            ContinueButton(action: {
+                nextPage()
+            }, geometry: geometry)
                 .padding(.bottom)
         }
         .frame(width: geometry.size.width, height: geometry.size.height * 0.4)
@@ -66,10 +86,14 @@ struct OnboardingInterface: View {
             withAnimation(.easeInOut(duration: 0.2)) {
                 currentPage += 1
             }
-        } else {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                currentPage = 0
-            }
+        } 
+        
+        if currentPage == 3 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                withAnimation {
+                   showCloseBtn = true
+                }
+           }
         }
     }
 }
@@ -148,9 +172,4 @@ struct ContinueButton: View {
             .cornerRadius(34)
         }.buttonStyle(PlainButtonStyle())
     }
-}
-
-
-#Preview {
-    OnboardingView()
 }

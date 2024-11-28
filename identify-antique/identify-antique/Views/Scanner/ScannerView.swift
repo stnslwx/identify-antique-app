@@ -1,9 +1,12 @@
 import SwiftUI
+import PhotosUI
 
 struct ScannerView: View {
     
-    @StateObject private var scanner = ScannerViewModel()
+    @ObservedObject var collectionVm: UserCollectionViewModel
+    @ObservedObject var collectionSheetModel: CollectionSheetModel
     
+    @StateObject private var scanner = ScannerViewModel()
     @Binding var openScanner: Bool
     
     @State private var isTorchOn: Bool = false
@@ -32,28 +35,47 @@ struct ScannerView: View {
                     }
                     .padding(.bottom, 20)
                     .padding(.horizontal, 20)
-                    .background(.black)
+                    .background(Color("0b0b0b"))
                     ScannerPreview(scanner: scanner)
-                        .frame(width: geometry.size.width, height: geometry.size.height * 0.75).background(.black)
+                        .frame(width: geometry.size.width, height: geometry.size.height * 0.75).background(Color("0b0b0b"))
+                        .overlay(alignment: .center) {
+//                            Image("scannerFrame")
+//                                .resizable()
+//                                .frame(width: geometry.size.width/2, height: geometry.size.width/2)
+                            SelectionRect(scanModel: scanner)
+                        }
                     
                     VStack {
-                        CaptureBtn(action: {
-                            scanner.takePicture()
-                        })
-                    }.frame(width: geometry.size.width, height: geometry.size.height * 0.15).background(.black)
-                    NavigationLink(destination: LoadingView(scanner: scanner, openScanner: $openScanner) , isActive: $scanner.shouldNavigate) {
+                        HStack {
+                            PhotosPicker(selection: $scanner.imageSelection, matching: .images) {
+                                RoundedRectangle(cornerRadius: 12).fill(Color("1b1b1b")).frame(width: 60, height: 60)
+                                    .overlay(alignment: .center) {
+                                    Image("gallery")
+                                }
+                            }
+                            //OpenGalleryBtn(action: {print("gallery")})
+                            Spacer()
+                        }
+                        .overlay(alignment: .center) {
+                            CaptureBtn(action: {
+                                scanner.takePicture()
+                            })
+                        }
+                    }
+                    .padding(.horizontal, 40)
+                    .frame(width: geometry.size.width, height: geometry.size.height * 0.15).background(Color("0b0b0b"))
+                    NavigationLink(destination: LoadingView(scanner: scanner, collectionVm: collectionVm,collectionSheetModel: collectionSheetModel, openScanner: $openScanner) , isActive: $scanner.shouldNavigate) {
                         EmptyView()
                     }
                 }
-                .frame(width: geometry.size.width, height: geometry.size.height).background(.black)
+                .frame(width: geometry.size.width, height: geometry.size.height).background(Color("0b0b0b"))
                 
             }
+
         }
         .onAppear(perform: {
             scanner.checkCameraAuthorization()
-
         })
-        
     }
     
     struct CaptureBtn: View {
@@ -72,5 +94,16 @@ struct ScannerView: View {
         }
     }
     
+    struct OpenGalleryBtn: View {
+        let action: () -> Void
+        var body: some View {
+            Button(action: action) {
+                RoundedRectangle(cornerRadius: 12).fill(Color("1b1b1b")).frame(width: 60, height: 60)
+                    .overlay(alignment: .center) {
+                    Image("gallery")
+                }
+            }
+        }
+    }
 }
 

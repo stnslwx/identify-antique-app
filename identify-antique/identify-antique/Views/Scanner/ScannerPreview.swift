@@ -21,7 +21,10 @@ struct ScannerPreview: UIViewRepresentable {
         scanner.preview.videoGravity = .resizeAspectFill
         view.layer.addSublayer(scanner.preview)
        
-        scanner.session.startRunning()
+        DispatchQueue.global(qos: .background).async {
+            self.scanner.session.startRunning()
+        }
+        //scanner.session.startRunning()
         
         return view
     }
