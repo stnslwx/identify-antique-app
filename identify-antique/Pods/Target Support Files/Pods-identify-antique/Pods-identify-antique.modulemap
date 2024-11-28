@@ -1,6 +1,0 @@
-framework module Pods_identify_antique {
-  umbrella header "Pods-identify-antique-umbrella.h"
-
-  export *
-  module * { export * }
-}
