@@ -8,6 +8,7 @@ enum Tab: String, CaseIterable {
 struct TabNavigationBar: View {    
     @Binding var selectedTab: Tab
     @Binding var openScanner: Bool
+    @Binding var showPaywall: Bool
     
     let geometry: GeometryProxy
     
@@ -33,7 +34,7 @@ struct TabNavigationBar: View {
         .frame(width: geometry.size.width, height: geometry.size.height * 0.11)
         .background(.white)
         .overlay(alignment: .top) {
-            ScanButton(openScanner: $openScanner)
+            ScanButton(openScanner: $openScanner, showPaywall: $showPaywall)
                 .offset(y: -30)
         }
     }
@@ -43,7 +44,9 @@ struct TabNavigationBar: View {
 
 
 struct ScanButton: View {
+    @AppStorage("scanCount") var scanCount = 0
     @Binding var openScanner: Bool
+    @Binding var showPaywall: Bool
     var body: some View {
         Circle()
             .fill(.white)
@@ -63,7 +66,11 @@ struct ScanButton: View {
                     }
             }
             .onTapGesture {
-                openScanner = true
+                if !IAPManager.shared.isPurchased && scanCount >= 2 {
+                    showPaywall = true
+                } else {
+                    openScanner = true
+                }
             }
     }
 }

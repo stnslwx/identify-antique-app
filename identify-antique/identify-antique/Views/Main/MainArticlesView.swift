@@ -3,11 +3,13 @@ import SwiftUI
 struct MainArticlesView: View {
     
     @ObservedObject var sheetModel: CollectionSheetModel
+    @StateObject private var articlesVM = ArticlesVm()
     
     var body: some View {
         VStack(spacing: 10) {
             ForEach(MainScreenArticles().articles) { article in
                 ArticleView(title: article.title, text: article.text, image: article.image, action: {
+                    articlesVM.selectedArticle = article
                     sheetModel.isArticleViewPresented = true
                 })
             }

@@ -5,21 +5,16 @@ struct MainTopView: View {
     let geometry: GeometryProxy
     var body: some View {
         VStack(spacing: 20) {
-            HStack {
-                MainTopButton(name: "info", action: {print("info")})
-                Spacer()
-                MainTopButton(name: "settings", action: {isMenuPresented = true})
-            }.padding(.top, 5)
             Spacer()
             HStack {
                 VStack(alignment: .leading) {
-                    MainViewInterfacePlan(planType: "Base Plan")
+                    MainViewInterfacePlan(planType: IAPManager.shared.isPurchased ? "Premium" : "Base Plan")
                     Text("Antique Identifier")
                         .foregroundStyle(.white)
                         .font(.title).bold()
                 }
                 Spacer()
-            }
+            }.padding(.top, 60)
             Spacer()
         }
         .frame(height: geometry.size.height * 0.26)
@@ -30,6 +25,9 @@ struct MainTopView: View {
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.top)
                 .offset(y: -5)
+        }
+        .onAppear {
+            print(IAPManager.shared.isPurchased)
         }
     }
 }

@@ -6,9 +6,7 @@ struct ResultsView: View {
     @Binding var navigate: Bool
     
     let geometry: GeometryProxy
-    
-    let items = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
-    
+        
     var body: some View {
         VStack(spacing: 0) {
             VStack{}.frame(width: 35, height: 3).background(Color("collectionSegmentBg")).cornerRadius(20).padding(.bottom, 25)
@@ -17,7 +15,7 @@ struct ResultsView: View {
             if scanModel.requestStatus == .loading {
                 LoadingWithText()
             } else if scanModel.requestStatus == .success {
-                SimilarResults(scanModel: scanModel, items: items, geometry: geometry)
+                SimilarResults(scanModel: scanModel, geometry: geometry)
             }
 
         }
@@ -47,10 +45,10 @@ struct ResultsView: View {
         var body: some View {
             Button(action: action) {
                 VStack {
-                    Text("View Results").font(.system(size: 17, weight: .bold)).foregroundStyle(.black)
+                    Text("View Results").font(.system(size: 17, weight: .bold)).foregroundStyle(.white)
                 }
                 .frame(width: 280, height: 60)
-                .background(.white)
+                .background(Color("accentGreen"))
                 .cornerRadius(69)
             }
         }
@@ -59,7 +57,6 @@ struct ResultsView: View {
     struct SimilarResults: View {
         @ObservedObject var scanModel: ScanResultModel
 
-        let items: [Int]
         let geometry: GeometryProxy
         var body: some View {
             

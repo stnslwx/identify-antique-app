@@ -10,45 +10,46 @@ struct CollectionItemView: View {
     
     @State private var isSavinInCollectionSheetPresented: Bool = false
     @State private var isCreateCollectionSheetPresented: Bool = false
-    
+        
     var body: some View {
         GeometryReader { geometry in
-            ScrollView(.vertical, showsIndicators: false) {
-                if let selectedItem = collectionVm.selectedItem {
+            if let selectedItem = collectionVm.selectedItem {
+                ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 16) {
                         VStack(spacing: 16) {
-                            CollItemTopBar(
-                                itemName: selectedItem.name,
-                                isItemSaved: collectionVm.itemSaved,
-                                navAction: {
-                                    collectionSheetModel.showInfo = false
-                                    collectionVm.itemSaved = false
-                                },
-                                addAction: {collectionSheetModel.saveInCollPresented = true},
-                                closeAction: {
-                                    print(collectionVm.collections)
-                                    collectionSheetModel.isInsideCollPresented = false
-                                    //collectionSheetModel.showInfo = false
-                                    collectionVm.selectedCollection = nil
-                                    collectionVm.itemSaved = false
-                                    collectionVm.closeItemInfoAction()
-                                })
-                            .zIndex(1)
                             ItemImageView(image: selectedItem.getImage())
-                            ItemStatistics(geometry: geometry, price: selectedItem.gptResult.price)
+                            ItemStatistics(geometry: geometry, price: selectedItem.gptResult.price, raiting: selectedItem.raiting)
                             AILabels(labels: selectedItem.gptResult.label)
                             OtherItemInformation(didYouKnow: selectedItem.gptResult.didYouKnow, facts: selectedItem.gptResult.description)
                         }.padding(.horizontal, 20)
                         SimilarItems(geometry: geometry, items: selectedItem.itemResult)
-                    }
+                    }.padding(.top, geometry.size.height * 0.1)
                 }
-            }
-            .frame(width: geometry.size.width, height: geometry.size.height)
-            .background(Color("mainBgColor"))
-            .overlay(alignment: .bottom) {
-                ConfirmationToast(text: "Successfully saved")
-                    .offset(y: collectionVm.showToastSaved ? -50 : 100)
-                    .animation(.easeInOut(duration: 0.5), value: collectionVm.showToastSaved)
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .background(Color("mainBgColor"))
+                .overlay(alignment: .bottom) {
+                    ConfirmationToast(text: "Successfully saved")
+                        .offset(y: collectionVm.showToastSaved ? -50 : 100)
+                        .animation(.easeInOut(duration: 0.5), value: collectionVm.showToastSaved)
+                }
+                .overlay(alignment: .top) {
+                    CollItemTopBar(
+                        itemName: selectedItem.name,
+                        isItemSaved: collectionVm.itemSaved,
+                        navAction: {
+                            collectionSheetModel.showInfo = false
+                            collectionVm.itemSaved = false
+                        },
+                        addAction: {collectionSheetModel.saveInCollPresented = true},
+                        closeAction: {
+                            print(collectionVm.collections)
+                            collectionSheetModel.isInsideCollPresented = false
+                            collectionVm.selectedCollection = nil
+                            collectionVm.itemSaved = false
+                            collectionVm.closeItemInfoAction()
+                        })
+                    .zIndex(1)
+                }
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -87,14 +88,21 @@ struct CollectionItemView: View {
             HStack {
                 ItemInfoButton(action: navAction, icon: "arrowLeft", isSecondary: true)
                 Spacer()
-                Text(itemName).font(.system(size: 20, weight: .bold))
+                Text(itemName).font(.system(size: 20, weight: .bold)).lineLimit(2)
                 Spacer()
                 if isItemSaved {
                     ItemInfoButton(action: closeAction, icon: "tick", isSecondary: false)
                 } else {
                     ItemInfoButton(action: addAction, icon: "plus", isSecondary: false)
                 }
-            }.frame(maxWidth: .infinity)
+            }
+            .padding(.bottom)
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity)
+            .background {
+                Color(.white)
+                    .edgesIgnoringSafeArea(.top)
+            }
         }
     }
     
@@ -117,6 +125,7 @@ struct CollectionItemView: View {
     struct ItemStatistics: View {
         let geometry: GeometryProxy
         let price: String
+        let raiting: String
         var body: some View {
             HStack {
                 HStack{
@@ -134,7 +143,7 @@ struct CollectionItemView: View {
                 HStack{
                     VStack(alignment: .leading, spacing: 5) {
                         Text("Rating").font(.system(size: 13)).foregroundStyle(Color("itemInfoGray"))
-                        Text("4.9").font(.system(size: 19)).bold()
+                        Text(raiting).font(.system(size: 19)).bold()
                     }
                     Spacer()
                 }

@@ -2,22 +2,29 @@ import SwiftUI
 
 struct MainActiveSection: View {
     @Binding var openScanner: Bool
+    @Binding var showPaywall: Bool
 
     var body: some View {
         VStack(spacing: 14) {
-            GetFullAccessSection()
+            if !IAPManager.shared.isPurchased {
+                GetFullAccessSection(showPaywall: $showPaywall)
+            }
             ScanNowSection(openScanner: $openScanner)
         }
     }
 }
 
 struct GetFullAccessSection: View {
+    @Binding var showPaywall: Bool
     var body: some View {
         HStack {
             VStack(alignment: .leading){
                 Text("Get Full Access").font(.system(size: 19, weight: .bold, design: .default))
                 Text("Unlock all app functions").font(.system(size: 14, weight: .medium, design: .default))
-                SectionButton(action: {print("tryForFree")}, label: "Try for Free", size: (130,39), textColor: .black, background: false)
+                SectionButton(action: {
+                    debugPrint("tryForFree btn>>>")
+                    showPaywall = true
+                }, label: "Try for Free", size: (130,39), textColor: .black, background: false)
             }.foregroundColor(.white)
             Spacer()
         }

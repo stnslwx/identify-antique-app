@@ -1,5 +1,4 @@
 import Foundation
-import Foundation
 
 final class UserCollectionViewModel: ObservableObject {
     @Published var collections: [Collection] = []
@@ -10,13 +9,11 @@ final class UserCollectionViewModel: ObservableObject {
     @Published var showToast: Bool = false
     @Published var showToastSaved: Bool = false
     
-    // Путь к директории для сохранения данных
     private func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
     }
     
-    // Сохранение коллекций в файл
     private func saveCollections() {
         let encoder = JSONEncoder()
         do {
@@ -29,12 +26,10 @@ final class UserCollectionViewModel: ObservableObject {
         }
     }
     
-    // Загрузка коллекций из файла
     private func loadCollections() {
         let decoder = JSONDecoder()
         let fileURL = getDocumentsDirectory().appendingPathComponent("collections.json")
         
-        // Проверка существования файла перед загрузкой
         if FileManager.default.fileExists(atPath: fileURL.path) {
             do {
                 let data = try Data(contentsOf: fileURL)
@@ -109,7 +104,6 @@ final class UserCollectionViewModel: ObservableObject {
         self.selectedCollForSaving = nil
     }
     
-    // Загружаем коллекции при запуске приложения
     init() {
         loadCollections()
     }

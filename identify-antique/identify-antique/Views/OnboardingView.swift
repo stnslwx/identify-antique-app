@@ -1,7 +1,8 @@
 import SwiftUI
+import StoreKit
+import KeychainSwift
 
 struct OnboardingView: View {
-    
     @Binding var isOnboardingShowing: Bool
     
     @State private var currentPage = 0
@@ -10,7 +11,7 @@ struct OnboardingView: View {
     let totalPages = 4
     let pageTitles = OnboardingStrings().pageTitles
     let pageDescriptions = OnboardingStrings().pageDescriptions
-    
+        
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment:.bottom) {
@@ -23,6 +24,7 @@ struct OnboardingView: View {
                                     if showCloseBtn {
                                         Image("xmarkGray").resizable().frame(width: 14, height: 14).padding(.top,20).padding(.trailing,20)
                                             .onTapGesture {
+                                            
                                                 isOnboardingShowing = false
                                             }
                                     }
@@ -33,21 +35,28 @@ struct OnboardingView: View {
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .edgesIgnoringSafeArea(.top)
                 
-                OnboardingInterface(geometry: geometry, currentPage: $currentPage, showCloseBtn: $showCloseBtn, totalPages: totalPages, title: pageTitles[currentPage], description: pageDescriptions[currentPage])
+                OnboardingInterface(geometry: geometry, currentPage: $currentPage, showCloseBtn: $showCloseBtn, totalPages: totalPages, title: pageTitles[currentPage], description: pageDescriptions[currentPage], isOnboardingShowing: $isOnboardingShowing)
             
             }
             .frame(maxHeight: .infinity)
+        }
+        .onAppear {
+            IAPManager.shared.requestProducts()
         }
     }
 }
 
 struct OnboardingInterface: View {
+    @ObservedObject var iapManager = IAPManager.shared
+
     let geometry: GeometryProxy
     @Binding var currentPage: Int
     @Binding var showCloseBtn: Bool
     let totalPages: Int
     let title: String
     let description: String
+    @Environment(\.requestReview) var requestReview
+    @Binding var isOnboardingShowing: Bool
     var body: some View {
         VStack{
             OnboardingPageIndicator(currentPage: $currentPage, totalPages: totalPages)
@@ -72,6 +81,16 @@ struct OnboardingInterface: View {
             }
             Spacer()
             ContinueButton(action: {
+                if currentPage == 3 {
+                    Task {
+                        await waitForPurchase()
+                        isOnboardingShowing = false
+                    }
+                    IAPManager.shared.requestProducts()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        IAPManager.shared.purchaseProduct()
+                   }
+                }
                 nextPage()
             }, geometry: geometry)
                 .padding(.bottom)
@@ -81,19 +100,31 @@ struct OnboardingInterface: View {
         .cornerRadius(37)
     }
     
-    func nextPage(){
+    @MainActor func nextPage(){
         if currentPage < totalPages - 1 {
             withAnimation(.easeInOut(duration: 0.2)) {
                 currentPage += 1
             }
-        } 
+        }
+        
+        if currentPage == 2 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                requestReview()
+            }
+        }
         
         if currentPage == 3 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 withAnimation {
                    showCloseBtn = true
                 }
            }
+        }
+    }
+    
+    private func waitForPurchase() async {
+        while !iapManager.isPurchased {
+            try? await Task.sleep(nanoseconds: 200_000_000)
         }
     }
 }

@@ -15,58 +15,62 @@ struct ResultItemView: View {
     
     @State private var isSavinInCollectionSheetPresented: Bool = false
     @State private var isCreateCollectionSheetPresented: Bool = false
+    @State private var raiting: String = ""
 
     var body: some View {
         GeometryReader { geometry in
-            ScrollView(.vertical, showsIndicators: false) {
-                if let scanData = scanResult.scanData {
+            if let scanData = scanResult.scanData {
+                ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 16) {
                         VStack(spacing: 16) {
-                            CollItemTopBar(
-                                itemName: scanData.gptResult.title,
-                                itemSaved: collectionVm.itemSaved,
-                                openScanner: $openScanner,
-                                navAction: {
-                                    presentationMode.wrappedValue.dismiss()
-                                    collectionVm.itemSaved = false
-                                    print("nav action")
-                                },
-                                addAction: {
-                                    collectionSheetModel.saveInCollPresented = true
-                                    if let image = scanner.capturedPhoto {
-                                        collectionVm.selectedItem = CollectionItem(
-                                            name: scanData.gptResult.title,
-                                            image: image,
-                                            gptResult: scanData.gptResult,
-                                            itemResult: scanData.itemResult
-                                        )
-                                    }
-                                },
-                                closeAction: {
-                                    openScanner = false
-                                    collectionVm.itemSaved = false
-                                    collectionVm.closeItemInfoAction()
-                                    print("close action")
-
-                                })
-                                .zIndex(10)
                             if let image = scanner.capturedPhoto {
                                 ItemImageView(image: image)
                             }
-                            ItemStatistics(geometry: geometry, price: scanData.gptResult.price)
+                            ItemStatistics(geometry: geometry, price: scanData.gptResult.price, raiting: raiting)
                             AILabels(labels: scanData.gptResult.label)
                             OtherItemInformation(didYouKnow: scanData.gptResult.didYouKnow, facts: scanData.gptResult.description)
                         }.padding(.horizontal, 20)
                         SimilarItems(geometry: geometry, items: scanData.itemResult)
-                    }
+                    }.padding(.top, geometry.size.height * 0.1)
                 }
-            }
-            .frame(width: geometry.size.width, height: geometry.size.height)
-            .background(Color("mainBgColor"))
-            .overlay(alignment: .bottom) {
-                ConfirmationToast(text: "Successfully saved")
-                    .offset(y: collectionVm.showToastSaved ? -50 : 100)
-                    .animation(.easeInOut(duration: 0.5), value: collectionVm.showToastSaved)
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .background(Color("mainBgColor"))
+                .overlay(alignment: .bottom) {
+                    ConfirmationToast(text: "Successfully saved")
+                        .offset(y: collectionVm.showToastSaved ? -50 : 100)
+                        .animation(.easeInOut(duration: 0.5), value: collectionVm.showToastSaved)
+                }
+                .overlay(alignment: .top) {
+                    CollItemTopBar(
+                        itemName: scanData.gptResult.title,
+                        itemSaved: collectionVm.itemSaved,
+                        openScanner: $openScanner,
+                        navAction: {
+                            presentationMode.wrappedValue.dismiss()
+                            collectionVm.itemSaved = false
+                            print("nav action")
+                        },
+                        addAction: {
+                            collectionSheetModel.saveInCollPresented = true
+                            if let image = scanner.capturedPhoto {
+                                collectionVm.selectedItem = CollectionItem(
+                                    name: scanData.gptResult.title,
+                                    image: image,
+                                    gptResult: scanData.gptResult,
+                                    itemResult: scanData.itemResult,
+                                    raiting: raiting
+                                )
+                            }
+                        },
+                        closeAction: {
+                            openScanner = false
+                            collectionVm.itemSaved = false
+                            collectionVm.closeItemInfoAction()
+                            print("close action")
+
+                        })
+                        .zIndex(10)
+                }
             }
         }.navigationBarBackButtonHidden(true)
         .sheet(isPresented: $collectionSheetModel.saveInCollPresented){
@@ -87,6 +91,9 @@ struct ResultItemView: View {
             CreateCollectionSheet(collectionVm: collectionVm, collectioSheetsModel: collectionSheetModel, isSaving: true)
                 .presentationDetents([.fraction(0.7)])
         }
+        .onAppear {
+            raiting = String((Double.random(in: 4.0...5.0) * 10).rounded() / 10)
+        }
     }
     
     // Title & buttons
@@ -105,14 +112,21 @@ struct ResultItemView: View {
             HStack {
                 ItemInfoButton(action: navAction, icon: "arrowLeft", isSecondary: true)
                 Spacer()
-                Text(itemName).font(.system(size: 20, weight: .bold))
+                Text(itemName).font(.system(size: 20, weight: .bold)).lineLimit(2)
                 Spacer()
                 if itemSaved {
                     ItemInfoButton(action: closeAction, icon: "tick", isSecondary: false)
                 } else {
                     ItemInfoButton(action: addAction, icon: "plus", isSecondary: false)
                 }
-            }.frame(maxWidth: .infinity)
+            }
+            .padding(.bottom)
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity)
+            .background {
+                Color(.white)
+                    .edgesIgnoringSafeArea(.top)
+            }
         }
     }
     
@@ -135,6 +149,7 @@ struct ResultItemView: View {
     struct ItemStatistics: View {
         let geometry: GeometryProxy
         let price: String
+        let raiting: String
         var body: some View {
             HStack {
                 HStack{
@@ -152,7 +167,7 @@ struct ResultItemView: View {
                 HStack{
                     VStack(alignment: .leading, spacing: 5) {
                         Text("Rating").font(.system(size: 13)).foregroundStyle(Color("itemInfoGray"))
-                        Text("4.9").font(.system(size: 19)).bold()
+                        Text(raiting).font(.system(size: 19)).bold()
                     }
                     Spacer()
                 }

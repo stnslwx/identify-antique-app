@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct LoadingView: View {
-    
+    @AppStorage("scanCount") var scanCount: Int = 0
+
     @ObservedObject var scanner: ScannerViewModel
     @ObservedObject var collectionVm: UserCollectionViewModel
     @ObservedObject var collectionSheetModel: CollectionSheetModel
@@ -36,15 +37,14 @@ struct LoadingView: View {
                 }
             }
             .onAppear(perform: {
-                if let image = scanner.capturedPhoto {
-                    scanModel.scanRequest(image: image, language: "ru")
+                if let image = UIImage(named: "testimage") {
+                    scanModel.scanRequest(image: image, language: "en")
+
                 }
-//                if let image = UIImage(named: "testimage") {
-//                    // Теперь вы можете использовать `image`
-//                    scanModel.scanRequest(image: image, language: "ru")
-//                } else {
-//                    print("Изображение не найдено в Assets")
+//                if let image = scanner.capturedPhoto {
+//                    scanModel.scanRequest(image: image, language: "en")
 //                }
+                scanCount += 1
             })
            
         }

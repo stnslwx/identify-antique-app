@@ -20,10 +20,12 @@ struct SplashScreen: View {
                 .background(.white)
                 .ignoresSafeArea(.all, edges: .all)
                 .onAppear {
-                    print(UserDefaults.standard.bool(forKey: "hasCompletedOnboarding"))
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        withAnimation {
-                            self.isActive = true
+                    Task {
+                       await IAPManager.shared.checkSubscriptionStatus()
+                        DispatchQueue.main.async {
+                            withAnimation {
+                                self.isActive = true
+                            }
                         }
                     }
                 }

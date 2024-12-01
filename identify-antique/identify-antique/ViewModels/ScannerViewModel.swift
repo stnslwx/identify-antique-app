@@ -49,18 +49,17 @@ final class ScannerViewModel: NSObject, ObservableObject, AVCapturePhotoCaptureD
             
             self.session.beginConfiguration()
             
-            let device = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back)
-            
-            let input = try AVCaptureDeviceInput(device: device!)
-            
-            if self.session.canAddInput(input) {
-                self.session.addInput(input)
+            if let device = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
+                let input = try AVCaptureDeviceInput(device: device)
+                
+                if self.session.canAddInput(input) {
+                    self.session.addInput(input)
+                }
+                
+                if self.session.canAddOutput(output) {
+                    self.session.addOutput(output)
+                }
             }
-            
-            if self.session.canAddOutput(output) {
-                self.session.addOutput(output)
-            }
-            
             
             self.session.commitConfiguration()
             
